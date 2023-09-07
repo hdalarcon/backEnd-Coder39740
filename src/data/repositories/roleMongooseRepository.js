@@ -76,11 +76,11 @@ class RoleMongooseRepository
           };
 
       const document = await roleSchema.create(dto);
-      return new Role({
+      return {
           id: document._id,
           name: document.name,
           permissions: document.permissions
-      });
+      };
   }
 
   async deleteOne(id)
