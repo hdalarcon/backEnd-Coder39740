@@ -59,6 +59,30 @@ class RoleMongooseRepository
     }
   }
 
+  async createRoleByName(role)
+  {
+      let permissions;
+      if (role === 'client')
+      {
+          permissions = client;
+      }
+      else if (role === 'premium')
+      {
+          permissions = premium;
+      }
+          const dto = {
+              name : role,
+              permissions
+          };
+
+      const document = await roleSchema.create(dto);
+      return new Role({
+          id: document._id,
+          name: document.name,
+          permissions: document.permissions
+      });
+  }
+
   async deleteOne(id)
   {
     return roleSchema.deleteOne({ _id: id });

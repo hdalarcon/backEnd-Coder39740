@@ -21,7 +21,10 @@ class RoleManager
   {
     return await this.roleRepository.create(data);
   }
-
+  async createRoleByName(role)
+  {
+      return this.repository.createRoleByName(role);
+  }
   async updateOne(id, data)
   {
     return this.roleRepository.updateOne(id, data);
