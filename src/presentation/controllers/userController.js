@@ -1,6 +1,6 @@
 import UserManager from "../../domain/manager/userManager.js";
-import CartManager from "../../domain/manager/cartManager.js"
-import RoleManager from '../../domain/manager/RoleManager.js';
+import CartManager from "../../domain/manager/cartManager.js";
+import RoleManager from "../../domain/manager/roleManager.js";
 
 export const list = async  (req, res, next) =>
 {
