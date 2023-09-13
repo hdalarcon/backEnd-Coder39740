@@ -1,45 +1,20 @@
-import nodemailer from "nodemailer";
-import { resolve } from 'path';
-import fs from "fs";
-import Handlebars from 'handlebars';
+import { transport } from '../../utils/index.js';
+import mailTicketTemplate from '../../presentation/templates/mailPassword.js';
 
 class EmailManager
 {
-    constructor()
+    async emailTicket(ticketString, userEmail)
     {
-        this.smtp_config = {
-            service : 'gmail',
-            port : process.env.SMTP_PORT,
-            auth : {
-                user: process.env.SMTP_USERNAME,
-                pass: process.env.SMTP_PASSWORD
-            },
-            secure: false,
-            tls: {
-                rejectUnauthorized: false
-              }
+        const mailContent = mailTicketTemplate(ticketString);
+        const mail = {
+            from : 'hdalarcon@gmail.com',
+            to: userEmail,
+            subject: 'Ticket de compra',
+            html: mailContent,
+            attachments: [
+        ]
         };
-    }
-
-    async send(templateFile)
-    {
-        const transporter = nodemailer.createTransport(this.smtp_config);
-
-        const templatePath = resolve(`src/presentation/templates/${templateFile}`);
-        const source = fs.readFileSync(templatePath).toString();
-        const template = Handlebars.compile(source);
-        const html = template({
-            userName: 'Usuario.'
-        });
-
-        const mailOptions = {
-            from: `"From" <${process.env.SMTP_FROM}>`,
-            to:  `"To" <${process.env.SMTP_TO}>`,
-            subject: 'Forgot your password',
-            html
-        };
-
-        await transporter.sendMail(mailOptions);
+        await transport.sendMail(mail);
     }
 }
 

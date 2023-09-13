@@ -25,6 +25,11 @@ class CartManager{
         return this.cartRepository.newCart();
     }
 
+    async purchaseProd(id)
+    {
+        return this.cartRepository.purchaseProd(id);
+    }
+
     async updateOne(cid, pid){
         return this.cartRepository.updateOne(cid, pid);
     }

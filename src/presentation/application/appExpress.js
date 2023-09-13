@@ -6,7 +6,7 @@ import productRouter from '../routes/productRouter.js';
 import sessionRouter from '../routes/sessionRouter.js';
 import userRouter from '../routes/userRouter.js';
 import roleRouter from '../routes/roleRouter.js';
-import emailRouter from "../routes/emailRouter.js";
+
 
 import errorHandler from '../middlewares/errorHandler.js';
 
@@ -30,7 +30,6 @@ class AppExpress
         this.app.use('/api/roles', roleRouter);
         this.app.use("/api/products", productRouter);
         this.app.use("/api/carts", cartRouter);
-        this.app.use('/api/email', emailRouter); //ver esta ruta
         this.app.use('/api/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
         this.app.use(errorHandler);
     }

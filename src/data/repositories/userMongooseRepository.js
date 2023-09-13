@@ -60,10 +60,10 @@ class UserMongooseRepository
         age: userDocument?.age,
         password: userDocument?.password,
         isAdmin: userDocument?.isAdmin,
-        role: userDocument.role ,       
-        cart: userDocument.cart,
-        lastConnection: userDocument.lastConnection,
-        documents: userDocument.documents,  
+        role: userDocument?.role,
+        cart: userDocument?.cart,
+        lastConnection: userDocument?.lastConnection,
+        documents: userDocument?.documents,
     }
   }
 

@@ -25,7 +25,7 @@ class UserManager
   async create(data)
   {
       const user = await this.userRepository.create(data);
-      return { ...user, password: undefined };
+      return {user};
   }
 
   async updateOne(id, data)

@@ -5,11 +5,10 @@ import authorization from "../middlewares/authorization.js";
 
 const productRouter = Router();
 
-
 productRouter.get('/', getAll);
 productRouter.get('/:pid', getOne);
 productRouter.post("/", auth, authorization('createProduct'), save)
 productRouter.put("/:pid", auth, authorization('updateProduct'), update);
-productRouter.delete("/:pid", deleteOne);
+productRouter.delete("/:pid", auth, authorization('deleteProduct'), deleteOne);
 
 export default productRouter;

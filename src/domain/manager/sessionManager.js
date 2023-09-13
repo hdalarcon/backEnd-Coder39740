@@ -1,6 +1,6 @@
 import container from '../../container.js'
 import {createHash, generateToken, isValidPassword} from "../../utils/index.js";
-import userCreateValidation from "../validations/user/userCreateValidation.js";
+import userCreateValidation from "../validations/user/userValidation.js";
 import loginValidation from "../validations/session/loginValidation.js";
 
 class SessionManager
@@ -27,7 +27,7 @@ class SessionManager
 
   async signup(payload)
   {
-    await userCreateValidation.parseAsync(payload);
+   await userCreateValidation.parseAsync(payload);
 
     const dto = {
       ...payload,

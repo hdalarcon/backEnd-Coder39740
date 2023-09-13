@@ -1,4 +1,8 @@
 import CartManager from "../../domain/manager/cartManager.js";
+import ProductManager from "../../domain/manager/productManager.js";
+import TicketManager from "../../domain/manager/ticketManager.js";
+import EmailManager from "../../domain/manager/emailManager.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export const getOne = async (req,res)=>{
     try {
@@ -88,15 +92,70 @@ export const updateProductByCartId = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 };
+export const purchaseCart = async(req, res, next) =>
+{
+    try
+    {
+            const cid = req.params.cid;
 
-export const purchaseCart = async (req, res, next) => {
-    try {
-        const cid = req.params.cid;
-        const user = req.user;
-        const ticket = await cartService.purchase(cid, user);
-        return res.status(200).json({ status: "success", message: 'Purchase success', payload: ticket })
-    } catch (error) {
-        next(error);
+            const product = new ProductManager();
+            const manager = new CartManager();
+
+            const getProdInCart = await manager.purchaseProd(cid);
+            
+            const prodInCartInfo = getProdInCart.products;
+
+            let amount = 0;
+
+            for (let i = 0; i < prodInCartInfo.length; i++)
+            {
+                const idProd = prodInCartInfo[i].id.toString();
+                const quantityProd = prodInCartInfo[i].quantity;
+                const completeProductInfo = await product.getOne(idProd);
+
+                const stockControl = completeProductInfo.stock - quantityProd;
+
+                if (stockControl < 0)
+                {
+                    continue;
+                }
+
+                const dto = {
+                    ...completeProductInfo,
+                    stock: stockControl
+                };
+                const modifProduct = await product.updateOne(idProd, dto);
+
+                const subTotal = completeProductInfo.price * quantityProd;
+                amount += subTotal;
+            }
+
+            const dtoTicket = {
+                purchaseDateTime: new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                amount,
+                purchaser: req.user.email
+            };
+            dtoTicket.code = uuidv4();
+
+            const ticket = new TicketManager();
+            const newTicket = await ticket.createNewTicket(dtoTicket);
+
+            const ticketString = JSON.stringify(newTicket, null, 2);
+
+            const userEmail = req.user.email;
+            const emailManager = new EmailManager();
+            await emailManager.emailTicket(ticketString, userEmail);
+
+            await manager.delete(cid);
+
+            res.status(201).send({
+                message: 'Products purchased successfully',
+                Ticket: newTicket
+            });
     }
-}
+    catch (e)
+{
+        next(e);
+    }
+};
 

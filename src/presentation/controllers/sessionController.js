@@ -1,5 +1,6 @@
 import SessionManager from "../../domain/manager/sessionManager.js";
 import UserManager from "../../domain/manager/userManager.js";
+import CartManager from "../../domain/manager/cartManager.js";
 import loginValidation from "../../domain/validations/session/loginValidation.js";
 import jwt from 'jsonwebtoken';
 
@@ -44,7 +45,6 @@ export const logout = async(req, res, next) =>
 {
     try
     {
-      console.log('req.headers.cookie ',req.headers.cookie);
         const token = req.headers.cookie;
 
         const tokenAccess = token.split('=')[1];
@@ -61,9 +61,9 @@ export const logout = async(req, res, next) =>
         const newLastConnection = new Date();
 
         infoUser.lastConnection = newLastConnection;
-        console.log('infoUser.lastConnection  ',infoUser.lastConnection );
-        // const userManager = new SessionManager();
-        // await userManager.updateOne(id, infoUser);
+        
+        const userManager = new UserManager();
+        await userManager.updateOne(id, infoUser);
         });
 
         res.clearCookie('accessToken');
@@ -78,10 +78,26 @@ export const logout = async(req, res, next) =>
 export const signup = async (req, res, next) =>
 {
   try {
-    const manager = new SessionManager();
-    const user = await manager.signup(req.body);
+    const newUser = req.body;
 
-    res.status(201).send({ status: 'success', user, message: 'User created.' });
+    const cart = new CartManager();
+    const cartAssociated = await cart.newCart();
+    newUser.cart = cartAssociated.id;
+
+    const userManager = new UserManager();
+    const userExist = await userManager.getOneByEmail(newUser.email);
+    
+    if (userExist.id === undefined)
+    {
+      const manager = new SessionManager();
+      const user = await manager.signup(newUser);
+      return res.status(201).send({
+        status: 'success',
+        message: 'User created.',
+        payload: user });
+    }
+    res.status(400).send({ status: 'error', message: 'Mail already in use' });
+
   } catch (error) {
     next(error);
   }

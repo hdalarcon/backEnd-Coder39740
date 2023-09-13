@@ -115,6 +115,7 @@ class CartMongooseRepository{
             throw new Error(`Error al querer eliminar el producto id ${pid} del carrito con id ${cid}.`);
         }
     }
+    
 
     async delete(id) {
         try {
@@ -128,6 +129,15 @@ class CartMongooseRepository{
             }
         } catch (error) {
             throw new Error(`Error al querer eliminar los productos del carrito con id ${id}.`);
+        }
+    }
+
+    async purchaseProd(cid)
+    {
+        const cartDocument = await cartSchema.findById(cid);
+        return {
+            id: cartDocument._id,
+            products: cartDocument.products
         }
     }
 
@@ -172,6 +182,7 @@ class CartMongooseRepository{
             throw new Error(`Error al querer actualizar el carrito con id ${cid}`);
         }
     };
+
 }
 
 export default CartMongooseRepository;

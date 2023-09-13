@@ -4,13 +4,13 @@ import auth from "../middlewares/auth.js"
 
 const cartRouter = Router();    
 
-cartRouter.get("/:cid", getOne);
-cartRouter.post("/", save);
-cartRouter.post("/:cid/product/:pid",update);
+cartRouter.get("/:cid", auth, getOne);
+cartRouter.post("/", auth, save);
+cartRouter.post("/:cid/product/:pid", auth,update);
 cartRouter.post('/:cid/purchase', auth, purchaseCart);
-cartRouter.delete("/:cid/products/:pid", deleteProduct);
-cartRouter.delete("/:cid", deleteCart);
-cartRouter.put("/:cid", updateProductsByCartId);
-cartRouter.put("/:cid/product/:pid", updateProductByCartId);
+cartRouter.delete("/:cid/products/:pid", auth,deleteProduct);
+cartRouter.delete("/:cid", auth,deleteCart);
+cartRouter.put("/:cid", auth,updateProductsByCartId);
+cartRouter.put("/:cid/product/:pid", auth,updateProductByCartId);
 
 export default cartRouter;

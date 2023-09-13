@@ -30,7 +30,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": " {\r\n    \"firstName\": \"Daniel\",\r\n    \"lastName\": \"Alarcon\",\r\n    \"email\": \"hdalarcon@gmail.com\",\r\n    \"age\": 44,\r\n    \"password\": \"654321\",\r\n    \"isAdmin\": true,\r\n    \"role\": \"client\"\r\n }",
+							"raw": " {\r\n    \"firstName\": \"Daniel\",\r\n    \"lastName\": \"Alarcon\",\r\n    \"email\": \"hdalarcon@gmail.com\",\r\n    \"age\": 44,\r\n    \"password\": \"654321a\",\r\n    \"isAdmin\": true,\r\n    \"role\": \"client\"\r\n }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -250,7 +250,6 @@
 							"script": {
 								"exec": [
 									"var jsonData = JSON.parse(responseBody)\r",
-									"\r",
 									"pm.environment.set('USER_ID', jsonData.payload.id)"
 								],
 								"type": "text/javascript"
@@ -343,7 +342,139 @@
 		},
 		{
 			"name": "carts",
-			"item": []
+			"item": [
+				{
+					"name": "getOneCart",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_AUTH}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/carts/{{ID_CART}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"carts",
+								"{{ID_CART}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addProductInCart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_AUTH}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/carts/{{ID_CART}}/product/{{ID_PROD}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"carts",
+								"{{ID_CART}}",
+								"product",
+								"{{ID_PROD}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "purcharseCart",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_AUTH}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/carts/{{ID_CART}}/purchase",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"carts",
+								"{{ID_CART}}",
+								"purchase"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "products",
@@ -425,7 +556,7 @@
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "deleteProduct",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -474,14 +605,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/api/products/645ac0d38a27b689f6e5a0ca",
+							"raw": "{{URL}}/api/products/{{ID_PROD}}",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"api",
 								"products",
-								"645ac0d38a27b689f6e5a0ca"
+								"{{ID_PROD}}"
 							]
 						}
 					},
@@ -491,7 +622,18 @@
 					"name": "getOneProduct",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/products/[{{ID_PROD}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"[{{ID_PROD}}"
+							]
+						}
 					},
 					"response": []
 				}

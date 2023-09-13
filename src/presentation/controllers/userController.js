@@ -1,6 +1,5 @@
 import UserManager from "../../domain/manager/userManager.js";
 import CartManager from "../../domain/manager/cartManager.js";
-import RoleManager from "../../domain/manager/roleManager.js";
 
 export const list = async  (req, res, next) =>
 {
@@ -33,16 +32,11 @@ export const getOne = async (req, res, next) =>
 export const save = async (req, res, next) =>
 {
   try {
-    const body = req.body;
+    const newUser = req.body;
     const cart = new CartManager();
     const cartAssociated = await cart.create(req.body);
-    body.cart = cartAssociated.id;
-    if (body.role !== undefined)
-    {
-        const role = new RoleManager();
-        const newRole = await role.createRoleByName(body.role);
-        body.role = newRole.id;
-    }
+    console.log('cartAssociated ',cartAssociated);
+    newUser.cart = cartAssociated.id;
 
     const manager = new UserManager();
     const user = await manager.create(req.body);
