@@ -12,7 +12,7 @@ export const getAll = async  (req, res) =>
         const products = await manager.paginate({ query, limit, page, sort });
         res.send({ status: 'success', products: products.docs, ...products, docs: undefined });
     } catch (error) {
-        res.status(400).send({message: 'Error al ingresar el numero de pagina.'});
+        res.status(400).send({message: 'Error al recuperar los productos.'});
     }
 };
 
@@ -23,7 +23,7 @@ export const save = async (req,res)=>{
         const product = await manager.create(req.body);
         res.send({ status: 'success', product, message: 'Product created.' })
     } catch (error) {
-        res.status(400).send({message: 'Error al ingresar el numero de pagina.'});
+        res.status(400).send({message: 'Error al crear el producto.'});
     }
 };
 

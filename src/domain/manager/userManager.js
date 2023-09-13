@@ -32,6 +32,10 @@ class UserManager
   {
     return this.userRepository.updateOne(id, data);
   }
+  async updateConnection(id, data)
+  {
+      return this.userRepository.updateConnection(id, data);
+  }
 
   async deleteOne(id)
   {

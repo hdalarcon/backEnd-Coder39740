@@ -1,4 +1,5 @@
 import SessionManager from "../../domain/manager/sessionManager.js";
+import UserManager from "../../domain/manager/userManager.js";
 import loginValidation from "../../domain/validations/session/loginValidation.js";
 import jwt from 'jsonwebtoken';
 
@@ -12,10 +13,19 @@ export const login = async  (req, res, next) =>
     const manager = new SessionManager();
     const accessToken = await manager.login(email, password);
 
+
+    const managerUser = new UserManager();
+    const user = await managerUser.getOneByEmail(email);
+
+    user.lastConnection = new Date();
+    
+    await managerUser.updateConnection(user.id, user);
+    
+
     res.cookie('accessToken', accessToken, {
       maxAge: 60*60*1000,
       httpOnly: true
-    }).send({ message: 'Login success!' })
+    }).send({ message: 'Login success!', accessToken })
   } catch (error) {
     next(error);
   }

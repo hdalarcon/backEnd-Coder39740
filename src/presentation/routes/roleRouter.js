@@ -7,7 +7,7 @@ const roleRouter = Router();
 
 roleRouter.get('/', auth, authorization('getRoles'), list);
 roleRouter.get('/:id', auth, authorization('getRole'), getOne);
-roleRouter.post('/', auth, auth, authorization('saveRole'), save);
+roleRouter.post('/', auth, authorization('saveRole'), save);
 roleRouter.put('/:id', auth, authorization('updateRole'), update);
 roleRouter.delete('/:id', auth, authorization('deleteRole'), deleteOne);
 

@@ -8,7 +8,7 @@ const UserSchema = new Schema({
   lastName: { type: Schema.Types.String },
   email: { type: Schema.Types.String, unique: true, required: true },
   age: { type: Schema.Types.Number, required: true },
-  role:{ type: Schema.Types.String, ref: 'roles', index: true, default: null },
+  role:{ type: Schema.Types.String, ref: 'roles', default: null },
   isAdmin: { type: Schema.Types.Boolean, default: false },
   password: { type: Schema.Types.String },
   cart: [{ type: Schema.Types.ObjectId, ref:'carts', index: true }],
@@ -20,11 +20,23 @@ const UserSchema = new Schema({
 UserSchema.plugin(paginate);
 
 UserSchema.pre('find', function () {
-  this.populate(['role']);
+  this.populate(['cart role']);
 });
 
 UserSchema.pre('findOne', function () {
-  this.populate(['role']);
+  this.populate(['cart role']);
+});
+
+UserSchema.pre('findOneAndUpdate', function(next)
+{
+    this.populate('cart');
+    next();
+});
+
+UserSchema.pre('updateOne', function(next)
+{
+    this.populate('cart');
+    next();
 });
 
 export default mongoose.model(userCollection, UserSchema);
