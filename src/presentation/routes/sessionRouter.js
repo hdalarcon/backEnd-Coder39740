@@ -9,7 +9,6 @@ sessionRouter.post('/login', login);
 sessionRouter.get('/current', auth, current);
 sessionRouter.get('/logout', logout);
 sessionRouter.post('/signup', signup);
-sessionRouter.post('/forgotPassword',);
 
 export default sessionRouter;
 

@@ -35,7 +35,6 @@ export const save = async (req, res, next) =>
     const newUser = req.body;
     const cart = new CartManager();
     const cartAssociated = await cart.create(req.body);
-    console.log('cartAssociated ',cartAssociated);
     newUser.cart = cartAssociated.id;
 
     const manager = new UserManager();

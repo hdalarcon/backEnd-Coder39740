@@ -8,7 +8,7 @@ const UserSchema = new Schema({
   lastName: { type: Schema.Types.String },
   email: { type: Schema.Types.String, unique: true, required: true },
   age: { type: Schema.Types.Number, required: true },
-  role:{ type: Schema.Types.String, ref: 'roles', default: null },
+  role:{ type: Schema.Types.String, ref: 'roles', default: 'client' },
   isAdmin: { type: Schema.Types.Boolean, default: false },
   password: { type: Schema.Types.String },
   cart: [{ type: Schema.Types.ObjectId, ref:'carts', index: true }],

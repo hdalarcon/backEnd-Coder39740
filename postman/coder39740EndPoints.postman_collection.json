@@ -73,7 +73,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"hdalarcon@gmail.com\",\r\n    \"password\": \"654321\"\r\n}",
+							"raw": "{\r\n    \"email\": \"hdalarcon@gmail.com\",\r\n    \"password\": \"654321a\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -249,8 +249,24 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var jsonData = JSON.parse(responseBody)\r",
-									"pm.environment.set('USER_ID', jsonData.payload.id)"
+									"tests[\"Status code is 201\"] = responseCode.code ===201;\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"tests[\"Response has data\"] = _.has(jsonData,'data');\r",
+									"pm.environment.set(\"USER_ID\", jsonData.user.id)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"FIRTSNAME\", pm.variables.replaceIn('{{$randomFirstName}}'))\r",
+									"pm.environment.set(\"LASTNAME\", pm.variables.replaceIn('{{$randomLastName}}'))\r",
+									"pm.environment.set(\"EMAIL\", pm.variables.replaceIn('{{$randomEmail}}'))\r",
+									"pm.environment.set(\"AGE\", _.random(18,99))\r",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -271,7 +287,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": " {\r\n    \"firstName\": \"Daniel\",\r\n    \"lastName\": \"Alarcon\",\r\n    \"email\": \"hdalarcon@gmail.com\",\r\n    \"age\": 44,\r\n    \"password\": \"654321\",\r\n    \"isAdmin\": true,\r\n    \"role\": \"client\"\r\n }",
+							"raw": " {\r\n    \"firstName\": \"{{FIRTSNAME}}\",\r\n    \"lastName\": \"{{LASTNAME}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"age\": {{AGE}},\r\n    \"password\": \"654321\",\r\n    \"isAdmin\": false,\r\n    \"role\": \"client\"\r\n }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -324,6 +340,34 @@
 						},
 						"method": "GET",
 						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/users/{{USER_ID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{USER_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUser",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"firstName\": \"{{FIRTSNAME}}\",\r\n    \"lastName\": \"{{LASTNAME}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"age\": {{AGE}},\r\n    \"isAdmin\": false,\r\n    \"role\": \"premium\"\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{URL}}/api/users/{{USER_ID}}",
 							"host": [
