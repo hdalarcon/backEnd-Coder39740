@@ -23,6 +23,7 @@ export const save = async (req,res)=>{
         const body = req.body;
         body.code= uuidv4();
         body.owner= req.user.email;
+        
         const manager =  new ProductManager();
         const product = await manager.create(body);
         res.send({ status: 'success', product, message: 'Product created.' })
