@@ -72,7 +72,8 @@ class ProductMongooseRepository{
                 status: productDocument.status,
                 stock: productDocument.stock,
                 category: productDocument.category,
-                thumbnail: productDocument.thumbnail
+                thumbnail: productDocument.thumbnail,
+                owner: productDocument.owner
             }
         } catch (error) {
             throw new Error(`Error al crear el producto.`);

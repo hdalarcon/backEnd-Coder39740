@@ -1,5 +1,5 @@
-
 import ProductManager from "../../domain/manager/productManager.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export const getAll = async  (req, res) =>
 {   
@@ -19,8 +19,12 @@ export const getAll = async  (req, res) =>
 
 export const save = async (req,res)=>{
     try {
+
+        const body = req.body;
+        body.code= uuidv4();
+        body.owner= req.user.email;
         const manager =  new ProductManager();
-        const product = await manager.create(req.body);
+        const product = await manager.create(body);
         res.send({ status: 'success', product, message: 'Product created.' })
     } catch (error) {
         res.status(400).send({message: 'Error al crear el producto.'});
