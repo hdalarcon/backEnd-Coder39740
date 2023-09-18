@@ -25,7 +25,7 @@ class UserMongooseRepository
 
   async getOne(id)
   {
-    const userDocument = await userSchema.findOne({ _id: id });
+    const userDocument = await userSchema.findOne({ _id: id }).populate(['role cart']);
 
     if(!userDocument)
     {
@@ -70,19 +70,20 @@ class UserMongooseRepository
   async create(data)
   {
     const userDocument = await userSchema.create(data);
+    const uDocument= await userSchema.findById(userDocument._id).populate('cart role').exec();
 
     return {
-        id: userDocument._id,
-        firstName: userDocument.firstName,
-        lastName: userDocument.lastName,
-        email: userDocument.email,
-        age: userDocument.age,
-        cart: userDocument.cart,
-        role: userDocument.role,
-        password: userDocument.password,
-        isAdmin: userDocument?.isAdmin,
-        lastConnection: userDocument.lastConnection,
-        documents: userDocument.documents,
+        id: uDocument._id,
+        firstName: uDocument.firstName,
+        lastName: uDocument.lastName,
+        email: uDocument.email,
+        age: uDocument.age,
+        cart: uDocument.cart,
+        role: uDocument.role,
+        password: uDocument.password,
+        isAdmin: uDocument?.isAdmin,
+        lastConnection: uDocument.lastConnection,
+        documents: uDocument.documents,
     }
   }
 

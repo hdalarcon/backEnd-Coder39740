@@ -11,7 +11,8 @@ const productSchema = new Schema({
     status: { type: Schema.Types.Boolean, default: true },
     stock: { type: Schema.Types.Number, require: true },
     category: { type: Schema.Types.String, require: true },
-    thumbnail: { type: Schema.Types.String, require: true }
+    thumbnail: { type: Schema.Types.String, require: true },
+    owner: { type: Schema.Types.String, default: 'admin' }
 })
 
 productSchema.plugin(mongoosePaginate);

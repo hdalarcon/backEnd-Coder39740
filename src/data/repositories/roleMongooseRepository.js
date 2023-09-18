@@ -2,19 +2,33 @@ import roleSchema from "../models/role.model.js";
 
 class RoleMongooseRepository
 {
-  async paginate(criteria)
-  {
-    const { limit, page } = criteria;
-    const roleDocuments = await roleSchema.paginate({}, { limit, page });
+  async paginate(paginate){
+    try {
+        const { limit = 10, page = 1, sort, query } = paginate;
+        const options = {
+            limit,
+            page,
+            sort: sort && { price: SORTVALUE[sort] },
+        };
 
-    roleDocuments.docs = roleDocuments.docs.map(document => ({
-      id: document._id,
-      name: document.name,
-      permissions: document.permissions
-    }));
+        const { docs, ...rest } = await roleSchema.paginate(query, options)
+        const roles = docs.map(item => ({
+            id: item._id,
+            title: item.title,
+            name: item.name,
+            permissions: item.permissions
+        }));
+        if(page > rest.totalPages || page < 0 || isNaN(page) )
+        { return console.log({ message: `Error al ingresar el numero de pagina.` });}
 
-    return roleDocuments;
-  }
+        rest.prevLink = rest.hasPrevPage ? `http://localhost:8080/api/products?page=${rest.prevPage}&limit=${limit}&sort=${sort}` : ''
+        rest.nextLink = rest.hasNextPage ? `http://localhost:8080/api/products?page=${rest.nextPage}&limit=${limit}&sort=${sort}` : ''
+
+        return { payload: roles, ...rest };
+    } catch (error) {
+        throw new Error('Error al realizar la paginacion.');
+    }
+}
 
   async getOne(id)
   {
