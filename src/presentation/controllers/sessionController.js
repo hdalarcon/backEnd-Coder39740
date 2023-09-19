@@ -45,29 +45,35 @@ export const logout = async(req, res, next) =>
 {
     try
     {
-        const token = req.headers.cookie;
-
-        const tokenAccess = token.split('=')[1];
-
-        jwt.verify(tokenAccess, process.env.PRIVATE_KEY, async(error, credentials) =>
-        {
-            if (error)
-            {
-                return res.status(403).send({ message: 'Authentication error' });
-            }
-
-        const infoUser = credentials.user;
-        const id = infoUser.id;
-        const newLastConnection = new Date();
-
-        infoUser.lastConnection = newLastConnection;
         
-        const userManager = new UserManager();
-        await userManager.updateOne(id, infoUser);
-        });
+        if(req.headers.cookie === undefined)
+        {
+          res.status(500).send({message: 'User not logged!'});
+        }else{
+          const token = req.headers.cookie;
+          const tokenAccess = token.split('=')[1];
+  
+          jwt.verify(tokenAccess, process.env.PRIVATE_KEY, async(error, credentials) =>
+          {
+              if (error)
+              {
+                  return res.status(403).send({ message: 'Authentication error' });
+              }
+  
+          const infoUser = credentials.user;
+          const id = infoUser.id;
+          const newLastConnection = new Date();
+  
+          infoUser.lastConnection = newLastConnection;
+          
+          const userManager = new UserManager();
+          await userManager.updateOne(id, infoUser);
+          });
+  
+          res.clearCookie('accessToken');
+          res.status(200).send({ message: 'logout ok!' });
+        }
 
-        res.clearCookie('accessToken');
-        res.status(200).send({ message: 'logout ok!' });
     }
     catch (e)
     {

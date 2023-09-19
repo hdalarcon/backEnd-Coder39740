@@ -14,8 +14,8 @@ class UserMongooseRepository
       email: document.email,
       age: document.age,
       isAdmin: document.isAdmin,
-      role: userDocument.role,
-      cart: userDocument.cart,
+      role: document.role,
+      cart: document.cart,
       lastConnection: document.lastConnection,
       documents: document.documents,  
     }));
@@ -50,7 +50,7 @@ class UserMongooseRepository
 
   async getOneByEmail(email)
   {
-    const userDocument = await userSchema.findOne({ email });
+    const userDocument = await userSchema.findOne({ email }).populate(['role cart']);
   
     return {
         id: userDocument?._id,

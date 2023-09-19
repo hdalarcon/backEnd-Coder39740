@@ -22,7 +22,10 @@ export const save = async (req,res)=>{
 
         const body = req.body;
         body.code= uuidv4();
-        body.owner= req.user.email;
+        if(req.user.role.name === 'premium')
+        {
+            body.owner= req.user.email;
+        }
         
         const manager =  new ProductManager();
         const product = await manager.create(body);
