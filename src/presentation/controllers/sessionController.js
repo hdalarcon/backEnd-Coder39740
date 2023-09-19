@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 export const login = async  (req, res, next) =>
 {
   try {
+    req.logger.debug('session controller: login');
     const { email, password } = req.body;
 
     await loginValidation.parseAsync(req.body);
@@ -35,6 +36,7 @@ export const login = async  (req, res, next) =>
 export const current = async  (req, res, next) =>
 {
   try {
+    req.logger.debug('session controller: current');
     res.status(200).send({ status: 'Success', payload: req.user });
   } catch (error) {
     next(error);
@@ -45,7 +47,7 @@ export const logout = async(req, res, next) =>
 {
     try
     {
-        
+        req.logger.debug('session controller: logout');
         if(req.headers.cookie === undefined)
         {
           res.status(500).send({message: 'User not logged!'});
@@ -75,15 +77,16 @@ export const logout = async(req, res, next) =>
         }
 
     }
-    catch (e)
+    catch (error)
     {
-        next(e);
+        next(error);
     }
 };
 
 export const signup = async (req, res, next) =>
 {
   try {
+    req.logger.debug('session controller: signup');
     const newUser = req.body;
 
     const cart = new CartManager();
@@ -130,9 +133,9 @@ export const forgotPassword = async(req, res, next) =>
 
         res.status(200).send({ message: 'mail send' });
     }
-    catch (e)
+    catch (error)
     {
-        next(e);
+        next(error);
     }
 };
 

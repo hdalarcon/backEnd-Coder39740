@@ -23,6 +23,18 @@
 								],
 								"type": "text/javascript"
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"FIRTSNAME\", pm.variables.replaceIn('{{$randomFirstName}}'))\r",
+									"pm.environment.set(\"LASTNAME\", pm.variables.replaceIn('{{$randomLastName}}'))\r",
+									"pm.environment.set(\"EMAIL\", pm.variables.replaceIn('{{$randomEmail}}'))\r",
+									"pm.environment.set(\"AGE\", _.random(18,99))"
+								],
+								"type": "text/javascript"
+							}
 						}
 					],
 					"request": {
@@ -30,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": " {\r\n    \"firstName\": \"Daniel\",\r\n    \"lastName\": \"Alarcon\",\r\n    \"email\": \"hdalarcon@gmail.com\",\r\n    \"age\": 44,\r\n    \"password\": \"654321a\",\r\n    \"isAdmin\": true,\r\n    \"role\": \"client\"\r\n }",
+							"raw": " {\r\n    \"firstName\": \"{{FIRTSNAME}}\",\r\n    \"lastName\": \"{{LASTNAME}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"age\": {{AGE}},\r\n    \"password\": \"123456\",\r\n    \"isAdmin\": false,\r\n    \"role\": \"client\"\r\n }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -73,7 +85,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"hdalarcon@gmail.com\",\r\n    \"password\": \"654321a\"\r\n}",
+							"raw": "{\r\n    \"email\": \"hdalarcon@gmail.com\",\r\n    \"password\": \"654321a\"\r\n}\r\n// {\r\n//     \"email\": \"Jerad.Jacobs@hotmail.com\",\r\n//     \"password\": \"654321\"\r\n// }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -287,7 +299,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": " {\r\n    \"firstName\": \"{{FIRTSNAME}}\",\r\n    \"lastName\": \"{{LASTNAME}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"age\": {{AGE}},\r\n    \"password\": \"654321\",\r\n    \"isAdmin\": false,\r\n    \"role\": \"client\"\r\n }",
+							"raw": " {\r\n    \"firstName\": \"{{FIRTSNAME}}\",\r\n    \"lastName\": \"{{LASTNAME}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"age\": {{AGE}},\r\n    \"password\": \"654321\",\r\n    \"isAdmin\": false,\r\n    \"role\": \"6507b01cd07a489f85c72ffd\"\r\n }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -579,7 +591,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Producto remera\",\r\n    \"description\": \"Remera lisa azul.\",\r\n    \"code\": \"ABCD123456222\",\r\n    \"price\": 7000,\r\n    \"status\": true,\r\n    \"stock\": 150,\r\n    \"category\": \"Remeras\",\r\n    \"thumbnail\": \"Sin imagen.\"\r\n}",
+							"raw": "{\r\n    \"title\": \"Producto remera usuario premium 7\",\r\n    \"description\": \"Remera lisa roja rayada.\",\r\n    \"price\": 9500,\r\n    \"status\": true,\r\n    \"stock\": 25,\r\n    \"category\": \"Remeras\",\r\n    \"thumbnail\": \"Sin imagen.\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -722,7 +734,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"client\",\r\n    \"permissions\": [\r\n        \"getUsers\",\r\n        \"getRoles\"\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"premium\",\r\n    \"permissions\": [\r\n        \"getCart\",\r\n        \"postCart\",\r\n        \"purchase\",\r\n        \"updateCart\",\r\n        \"putProdCart\",\r\n        \"deleteProdCart\",\r\n        \"deleteAllProdCart\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -737,6 +749,63 @@
 							"path": [
 								"api",
 								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRoles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_AUTH}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/roles",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOneRole",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_AUTH}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/roles/6507a0fa056f20d5185efca0",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								"6507a0fa056f20d5185efca0"
 							]
 						}
 					},

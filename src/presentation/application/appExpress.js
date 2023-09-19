@@ -6,6 +6,9 @@ import productRouter from '../routes/productRouter.js';
 import sessionRouter from '../routes/sessionRouter.js';
 import userRouter from '../routes/userRouter.js';
 import roleRouter from '../routes/roleRouter.js';
+import loggerRouter from '../routes/loggerRouter.js';
+import { addLogger } from '../../utils/logger.js';
+import { addLoggerTest } from '../../utils/loggerTest.js';
 
 
 import errorHandler from '../middlewares/errorHandler.js';
@@ -21,6 +24,7 @@ class AppExpress
         this.app.use(express.json());
         this.app.use(express.urlencoded({extended: true}));
         this.app.use(cookieParser());
+        this.app.use(addLogger);
     }
 
     build()
@@ -31,6 +35,7 @@ class AppExpress
         this.app.use("/api/products", productRouter);
         this.app.use("/api/carts", cartRouter);
         this.app.use('/api/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+        this.app.use('/api/loggerTest', loggerRouter);
         this.app.use(errorHandler);
     }
 

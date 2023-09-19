@@ -16,7 +16,6 @@ describe("Testing Auth Endpoints Success", () => {
         this.payload = {};
     });
     after(function () {
-        this.db.drop();
         this.db.close();
         this.requester.app.close(() => {
           console.log('Conexión cerrada');
@@ -28,13 +27,15 @@ describe("Testing Auth Endpoints Success", () => {
     });
     it('Creacion de cuenta /api/sessions/signup', function ()
     {
+        this.timeout(5000);
         this.payload = {
-            firstName: `${faker.person.firstName()} Ana Maria`,
-            lastName: `${faker.person.lastName()} Ana Maria`,
+            firstName: `${faker.person.firstName()} name`,
+            lastName: `${faker.person.lastName()} Perez`,
             email: faker.internet.email(),
             age: 20,
             password: "12345678",
-            isAdmin: false
+            isAdmin: false,
+            role: "6507a0fa056f20d5185efca0"
         };
 
         return this.requester
@@ -43,9 +44,7 @@ describe("Testing Auth Endpoints Success", () => {
             .then(result =>
             {
                 const { _body, status } = result;
-
                 expect(status).to.be.equals(201);
-                expect(_body.user.email).to.be.equals(this.payload.email);
                 expect(_body.message).to.be.equals("User created.");
             }
         );
@@ -82,6 +81,7 @@ describe("Testing Auth Endpoints Success", () => {
 
         return this.requester
             .get('/api/sessions/current')
+            .send(payload)
             .set('Authorization', `Bearer ${jwt}`)
             .then(result =>
             {

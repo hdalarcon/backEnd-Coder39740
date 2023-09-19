@@ -12,9 +12,9 @@ export const list = async  (req, res, next) =>
 
     res.send({ status: 'success', roles: roles.docs, ...roles, docs: undefined });
   }
-  catch (e)
+  catch (error)
   {
-		next(e);
+		next(error);
 	}
 };
 
@@ -29,9 +29,9 @@ export const getOne = async (req, res, next) =>
 
     res.send({ status: 'success', role });
   }
-  catch (e)
+  catch (error)
   {
-		next(e);
+		next(error);
 	}
 };
 
@@ -44,9 +44,9 @@ export const save = async (req, res, next) =>
 
     res.send({ status: 'success', role, message: 'Role created.' });
   }
-  catch (e)
+  catch (error)
   {
-		next(e);
+		next(error);
 	}
 };
 
@@ -61,9 +61,9 @@ export const update = async (req, res, next) =>
 
     res.send({ status: 'success', result, message: 'Role updated.' });
   }
-  catch (e)
+  catch (error)
   {
-		next(e);
+		next(error);
 	}
 };
 
@@ -78,8 +78,8 @@ export const deleteOne = async (req, res, next) =>
 
     res.send({ status: 'success', message: 'Role deleted.' });
   }
-  catch (e)
+  catch (error)
   {
-		next(e);
+		next(error);
 	}
 };

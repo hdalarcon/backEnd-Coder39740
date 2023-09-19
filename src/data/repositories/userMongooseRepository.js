@@ -4,10 +4,16 @@ class UserMongooseRepository
 {
   async paginate(paginate)
   {
-    const { limit, page } = paginate;
+    const { limit = 10, page = 1, sort, query } = paginate;
+    const options = {
+        limit,
+        page,
+        sort: sort && { price: SORTVALUE[sort] },
+    };
     const userDocuments = await userSchema.paginate({}, { limit, page });
+    const { docs, ...rest } = userDocuments;
 
-    userDocuments.docs = userDocuments.docs.map(document => ({
+    const users =docs.map(document => ({
       id: document._id,
       firstName: document.firstName,
       lastName: document.lastName,
@@ -20,7 +26,13 @@ class UserMongooseRepository
       documents: document.documents,  
     }));
 
-    return userDocuments;
+    if(page > rest.totalPages || page < 0 || isNaN(page) )
+    { return console.log({ message: `Error al ingresar el numero de pagina.` });}
+
+    rest.prevLink = rest.hasPrevPage ? `http://localhost:8080/api/users?page=${rest.prevPage}&limit=${limit}&sort=${sort}` : ''
+    rest.nextLink = rest.hasNextPage ? `http://localhost:8080/api/users?page=${rest.nextPage}&limit=${limit}&sort=${sort}` : ''
+
+    return { users, rest };
   }
 
   async getOne(id)

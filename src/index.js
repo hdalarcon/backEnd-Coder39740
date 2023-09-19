@@ -18,6 +18,6 @@ void(async()=>
         app.listen();
 
     } catch (error) {
-        throw new Error(error);
+        console.log(e);
     }
 })();

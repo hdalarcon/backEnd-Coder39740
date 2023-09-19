@@ -1,25 +1,26 @@
 import ProductManager from "../../domain/manager/productManager.js";
 import { v4 as uuidv4 } from 'uuid';
 
-export const getAll = async  (req, res) =>
+export const getAll = async  (req, res, next) =>
 {   
     try {
+        req.logger.debug('product controller: get all');
         const { limit, page, sort } = req.query;
 
         let query = {}
         if(req.query.category || req.query.status) query = req.query
         const manager = new ProductManager();
         const products = await manager.paginate({ query, limit, page, sort });
-        res.send({ status: 'success', products: products.docs, ...products, docs: undefined });
+        res.status(200).send({ status: 'success', message: 'All products', products: products.docs, ...products, docs: undefined });
     } catch (error) {
-        res.status(400).send({message: 'Error al recuperar los productos.'});
+        next(error);
     }
 };
 
 
-export const save = async (req,res)=>{
+export const save = async (req,res, next)=>{
     try {
-
+        req.logger.debug('product controller: create product');
         const body = req.body;
         body.code= uuidv4();
         if(req.user.role.name === 'premium')
@@ -29,44 +30,48 @@ export const save = async (req,res)=>{
         
         const manager =  new ProductManager();
         const product = await manager.create(body);
-        res.send({ status: 'success', product, message: 'Product created.' })
+        
+        res.status(201).send({ result: 'success', payload: product, message: 'Product created.' })
     } catch (error) {
-        res.status(400).send({message: 'Error al crear el producto.'});
+        next(error);
     }
 };
 
-export const getOne = async (req,res)=>{
+export const getOne = async (req,res,next)=>{
     try {
+        req.logger.debug('product controller: get one');
         const { pid } = req.params;
         const manager = new ProductManager();
         const product = await manager.getOne(pid);
 
-        res.send({ status: 'success', product });
+        res.status(201).send({ result: 'success', message: `Product with Id: ${pid} found`, payload: product });
     } catch (error) {
-        res.status(404).send({error: error.message});
+        next(error);
     }
 };
 
 
-export const update = async(req,res)=>{
+export const update = async(req,res,next)=>{
     try {
+        req.logger.debug('product controller: update one product');
         const { pid } = req.params;
         const manager = new ProductManager();
         const product = await manager.updateOne(pid,req.body);
         res.send({ status: 'success', product, message: 'Product updated.' });
     } catch (error) {
-        res.status(404).send({message: `Error al querer actualizar el producto.`});
+        next(error);
     }
 };
 
-export const deleteOne = async(req,res)=>{
+export const deleteOne = async(req,res,next)=>{
     try {
+        req.logger.debug('product controller: delete one');
         const { pid } = req.params;
         const manager = new ProductManager();
         const product = await manager.deleteOne(pid);
         res.send({ status: 'success', product, message: 'Product deleted.' })
     } catch (error) {
-        res.status(404).send({error: error});
+        next(error);
     }
 };
 
